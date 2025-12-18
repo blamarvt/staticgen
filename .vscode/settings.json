@@ -1,0 +1,12 @@
+{
+  "editor.formatOnSave": true,
+  "editor.tabSize": 4,
+  "files.associations": {
+    "*.tmpl": "html",
+    "*.hcml": "xml",
+  },
+  "[xml]": {
+    "editor.formatOnSave": true,
+    "editor.tabSize": 4
+  }
+}

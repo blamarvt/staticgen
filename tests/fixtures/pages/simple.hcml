@@ -1,0 +1,6 @@
+<page hcmlns="staticgen" 
+      hcmlns:component="staticgen:components"
+      title="Test Page"
+      path="/test.html">
+    <component:greeting name="World" message="Welcome to our test!" />
+</page>

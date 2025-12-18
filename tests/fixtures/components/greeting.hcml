@@ -1,0 +1,7 @@
+<?hcml version="1.0" encoding="UTF-8"?>
+<greeting hcmlns="staticgen:components">
+    <div class="greeting">
+        <h1>Hello, {{ .Name }}!</h1>
+        <p>{{ .Message }}</p>
+    </div>
+</greeting>
