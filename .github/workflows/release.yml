@@ -1,0 +1,113 @@
+name: Release
+
+on:
+  push:
+    branches: [main]
+
+jobs:
+  release:
+    name: Create Release
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0 # Need full history for conventional commits
+
+      - name: Set up Go
+        uses: actions/setup-go@v5
+        with:
+          go-version: "1.21"
+          cache: true
+
+      - name: Download dependencies
+        run: go mod download
+
+      - name: Run tests
+        run: make test
+
+      - name: Determine version
+        id: version
+        uses: paulhatch/semantic-version@v5.4.0
+        with:
+          tag_prefix: "v"
+          major_pattern: "(BREAKING CHANGE|BREAKING-CHANGE|breaking change|breaking-change):"
+          minor_pattern: "(feat|feature):"
+          version_format: "${major}.${minor}.${patch}"
+          bump_each_commit: false
+          search_commit_body: true
+
+      - name: Check if version changed
+        id: check_version
+        run: |
+          LATEST_TAG=$(git describe --tags --abbrev=0 2>/dev/null || echo "v0.0.0")
+          NEW_VERSION="v${{ steps.version.outputs.version }}"
+          echo "Latest tag: $LATEST_TAG"
+          echo "New version: $NEW_VERSION"
+          if [ "$LATEST_TAG" = "$NEW_VERSION" ]; then
+            echo "changed=false" >> $GITHUB_OUTPUT
+            echo "No version change detected, skipping release"
+          else
+            echo "changed=true" >> $GITHUB_OUTPUT
+            echo "Version changed, creating release"
+          fi
+
+      - name: Build binaries
+        if: steps.check_version.outputs.changed == 'true'
+        run: |
+          # Linux AMD64
+          GOOS=linux GOARCH=amd64 go build -ldflags "-s -w" -o bin/staticgen-linux-amd64 .
+
+          # Linux ARM64
+          GOOS=linux GOARCH=arm64 go build -ldflags "-s -w" -o bin/staticgen-linux-arm64 .
+
+          # macOS AMD64
+          GOOS=darwin GOARCH=amd64 go build -ldflags "-s -w" -o bin/staticgen-darwin-amd64 .
+
+          # macOS ARM64 (Apple Silicon)
+          GOOS=darwin GOARCH=arm64 go build -ldflags "-s -w" -o bin/staticgen-darwin-arm64 .
+
+          # Windows AMD64
+          GOOS=windows GOARCH=amd64 go build -ldflags "-s -w" -o bin/staticgen-windows-amd64.exe .
+
+          # Create checksums
+          cd bin
+          sha256sum * > SHA256SUMS
+          cd ..
+
+      - name: Generate changelog
+        if: steps.check_version.outputs.changed == 'true'
+        id: changelog
+        run: |
+          LATEST_TAG=$(git describe --tags --abbrev=0 2>/dev/null || echo "")
+          if [ -z "$LATEST_TAG" ]; then
+            COMMITS=$(git log --pretty=format:"* %s (%h)" --no-merges)
+          else
+            COMMITS=$(git log ${LATEST_TAG}..HEAD --pretty=format:"* %s (%h)" --no-merges)
+          fi
+
+          echo "## What's Changed" > changelog.md
+          echo "" >> changelog.md
+          echo "$COMMITS" >> changelog.md
+          echo "" >> changelog.md
+          echo "**Full Changelog**: https://github.com/${{ github.repository }}/compare/${LATEST_TAG}...v${{ steps.version.outputs.version }}" >> changelog.md
+
+      - name: Create Release
+        if: steps.check_version.outputs.changed == 'true'
+        uses: softprops/action-gh-release@v1
+        with:
+          tag_name: v${{ steps.version.outputs.version }}
+          name: Release v${{ steps.version.outputs.version }}
+          body_path: changelog.md
+          draft: false
+          prerelease: false
+          files: |
+            bin/staticgen-linux-amd64
+            bin/staticgen-linux-arm64
+            bin/staticgen-darwin-amd64
+            bin/staticgen-darwin-arm64
+            bin/staticgen-windows-amd64.exe
+            bin/SHA256SUMS
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
