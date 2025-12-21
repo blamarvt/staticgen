@@ -95,11 +95,9 @@ jobs:
 
       - name: Create Release
         if: steps.check_version.outputs.changed == 'true'
-        uses: softprops/action-gh-release@v1
+        uses: softprops/action-gh-release@v2
         with:
           tag_name: v${{ steps.version.outputs.version }}
-          name: Release v${{ steps.version.outputs.version }}
-          body_path: changelog.md
           draft: false
           prerelease: false
           files: |
@@ -109,5 +107,4 @@ jobs:
             bin/staticgen-darwin-arm64
             bin/staticgen-windows-amd64.exe
             bin/SHA256SUMS
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          token: ${{ secrets.GITHUB_TOKEN }}
