@@ -57,19 +57,19 @@ jobs:
         if: steps.check_version.outputs.changed == 'true'
         run: |
           # Linux AMD64
-          GOOS=linux GOARCH=amd64 go build -ldflags "-s -w" -o bin/staticgen-linux-amd64 .
+          GOOS=linux GOARCH=amd64 go build -ldflags "-s -w" -o bin/staticgen-linux-amd64 cmd/staticgen/main.go
 
           # Linux ARM64
-          GOOS=linux GOARCH=arm64 go build -ldflags "-s -w" -o bin/staticgen-linux-arm64 .
+          GOOS=linux GOARCH=arm64 go build -ldflags "-s -w" -o bin/staticgen-linux-arm64 cmd/staticgen/main.go
 
           # macOS AMD64
-          GOOS=darwin GOARCH=amd64 go build -ldflags "-s -w" -o bin/staticgen-darwin-amd64 .
+          GOOS=darwin GOARCH=amd64 go build -ldflags "-s -w" -o bin/staticgen-darwin-amd64 cmd/staticgen/main.go
 
           # macOS ARM64 (Apple Silicon)
-          GOOS=darwin GOARCH=arm64 go build -ldflags "-s -w" -o bin/staticgen-darwin-arm64 .
+          GOOS=darwin GOARCH=arm64 go build -ldflags "-s -w" -o bin/staticgen-darwin-arm64 cmd/staticgen/main.go
 
           # Windows AMD64
-          GOOS=windows GOARCH=amd64 go build -ldflags "-s -w" -o bin/staticgen-windows-amd64.exe .
+          GOOS=windows GOARCH=amd64 go build -ldflags "-s -w" -o bin/staticgen-windows-amd64.exe cmd/staticgen/main.go
 
           # Create checksums
           cd bin
