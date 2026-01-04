@@ -6,19 +6,30 @@ Generates assets which can be easily hosted via normal web servers. Especially u
 
 ```
 staticgen/
-├── pkg/                    # Main package code
-│   ├── component/         # Component definitions and instances
-│   ├── page/             # Page loading and generation
-│   ├── htmlutil/         # HTML utilities
-│   └── internal/         # Internal utilities (xmlutil)
-├── tests/                # End-to-end tests
-│   └── fixtures/        # Test fixtures
-├── examples/            # Example projects
-├── main.go             # CLI entry point
-└── Makefile            # Build automation
+├── cmd/
+│   └── staticgen/        # CLI entry point
+├── pkg/                   # Main package code
+│   ├── component/        # Component definitions and instances
+│   ├── page/            # Page loading and generation
+│   ├── htmlutil/        # HTML utilities
+│   └── internal/        # Internal utilities (xmlutil)
+├── tests/               # End-to-end tests
+│   └── fixtures/       # Test fixtures
+├── examples/           # Example projects
+└── Makefile           # Build automation
 ```
 
-## Prerequisites
+## Installation
+
+### Install via Go
+
+```bash
+go install github.com/blamarvt/staticgen/cmd/staticgen@latest
+```
+
+This will install the `staticgen` binary to your `$GOPATH/bin` directory.
+
+### Build from Source
 
 This project requires `make` to build.
 
