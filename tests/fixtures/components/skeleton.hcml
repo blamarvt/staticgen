@@ -1,0 +1,12 @@
+<?hcml version="1.0" encoding="UTF-8"?>
+<skeleton hcmlns="staticgen:components">
+    <!DOCTYPE html>
+    <html>
+        <head>
+            <title>{{ .Title }}</title>
+        </head>
+        <body>
+            {{ .Children }}
+        </body>
+    </html>
+</skeleton>
