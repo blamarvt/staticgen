@@ -3,9 +3,10 @@ module github.com/blamarvt/staticgen
 go 1.25.5
 
 require (
+	codeberg.org/derat/htmlpretty v0.0.0-20241226124600-6358d6878bd9
 	github.com/stretchr/testify v1.11.1
 	github.com/yosssi/gohtml v0.0.0-20201013000340-ee4748c638f4
-	golang.org/x/net v0.22.0
+	golang.org/x/net v0.49.0
 )
 
 require (
