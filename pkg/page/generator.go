@@ -10,10 +10,6 @@ import (
 func Generate(p *Page, registry *component.Registry) (string, error) {
 	var html strings.Builder
 
-	html.WriteString("<!DOCTYPE html>\n<html>\n<head>\n")
-	html.WriteString("<title>" + p.Title + "</title>\n")
-	html.WriteString("</head>\n<body>\n")
-
 	// Render each component
 	for _, comp := range p.Components {
 		rendered, err := comp.Render(registry)
@@ -23,6 +19,5 @@ func Generate(p *Page, registry *component.Registry) (string, error) {
 		html.WriteString(rendered)
 	}
 
-	html.WriteString("</body>\n</html>")
 	return html.String(), nil
 }
