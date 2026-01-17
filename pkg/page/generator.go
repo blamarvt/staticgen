@@ -4,6 +4,7 @@ import (
 	"strings"
 
 	"github.com/blamarvt/staticgen/pkg/component"
+	"github.com/yosssi/gohtml"
 )
 
 // Generate creates the final HTML from a page
@@ -19,5 +20,5 @@ func Generate(p *Page, registry *component.Registry) (string, error) {
 		html.WriteString(rendered)
 	}
 
-	return html.String(), nil
+	return gohtml.Format(html.String()), nil
 }
