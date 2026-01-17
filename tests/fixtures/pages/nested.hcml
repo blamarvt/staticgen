@@ -2,7 +2,9 @@
       hcmlns:component="staticgen:components"
       title="Nested Test"
       path="/nested.html">
-    <component:container title="Main Container">
-        <component:greeting name="User" message="This is nested!" />
-    </component:container>
+    <component:skeleton title="Nested Test">
+        <component:container title="Main Container">
+            <component:greeting name="User" message="This is nested!" />
+        </component:container>
+    </component:skeleton>
 </page>

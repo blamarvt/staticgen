@@ -2,5 +2,7 @@
       hcmlns:component="staticgen:components"
       title="Test Page"
       path="/test.html">
+  <component:skeleton title="Test Page">
     <component:greeting name="World" message="Welcome to our test!" />
+  </component:skeleton>
 </page>

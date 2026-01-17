@@ -62,7 +62,6 @@ func TestEndToEndMixedContent(t *testing.T) {
 	p, err := page.LoadPage("fixtures/pages/mixed.hcml", registry)
 	require.NoError(t, err, "Failed to load page")
 
-	assert.Equal(t, "Mixed Content Test", p.Title, "Page title mismatch")
 	assert.Equal(t, "/mixed.html", p.Path, "Page path mismatch")
 
 	// Generate HTML

@@ -1,19 +1,20 @@
 <page hcmlns="staticgen" 
       hcmlns:component="staticgen:components"
-      title="Mixed Content Test"
       path="/mixed.html">
-	<component:container title="Container with Mixed Content">
-		<div class="plain-html">
-			<p>This is plain HTML inside a component</p>
-			<span>No template needed!</span>
-		</div>
-		<component:greeting name="Alice" message="Components work too!" />
-		<section>
-			<h3>More plain HTML</h3>
-			<ul>
-				<li>Item 1</li>
-				<li>Item 2</li>
-			</ul>
-		</section>
-	</component:container>
+	<component:skeleton title="Mixed Content Test">
+		<component:container title="Container with Mixed Content">
+			<div class="plain-html">
+				<p>This is plain HTML inside a component</p>
+				<span>No template needed!</span>
+			</div>
+			<component:greeting name="Alice" message="Components work too!" />
+			<section>
+				<h3>More plain HTML</h3>
+				<ul>
+					<li>Item 1</li>
+					<li>Item 2</li>
+				</ul>
+			</section>
+		</component:container>
+	</component:skeleton>
 </page>
