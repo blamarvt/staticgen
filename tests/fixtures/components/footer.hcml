@@ -1,0 +1,7 @@
+<?hcml version="1.0" encoding="UTF-8"?>
+<footer hcmlns="staticgen:components">
+	<footer class="site-footer">
+		<p>© {{ Var "year" }} {{ Var "siteName" }}. All rights reserved.</p>
+		<p>Author: {{ Var "author" }}</p>
+	</footer>
+</footer>
