@@ -15,6 +15,9 @@
 					<li>Item 2</li>
 				</ul>
 			</section>
+			<div slot="extra">
+				<p>This is extra content in a slot.</p>
+			</div>
 		</component:container>
 	</component:skeleton>
 </page>

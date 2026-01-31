@@ -97,6 +97,17 @@ func parseComponent(node xmlutil.Node, registry *component.Registry) (*component
 
 	// If it's not a component, treat it as raw HTML
 	if !isComponent {
+		// Check if this element has a "slot" attribute
+		if slotName, hasSlot := node.GetAttr("slot"); hasSlot {
+			// This is a slot element - return only the inner content
+			// Don't include the wrapper element itself
+			return &component.Instance{
+				DefinitionName: "__slot__", // Special marker
+				Attributes:     map[string]string{"name": slotName},
+				RawHTML:        string(node.Content), // Just the inner content
+			}, nil
+		}
+
 		// Reconstruct the HTML for this node
 		html, err := reconstructHTML(node)
 		if err != nil {
@@ -112,6 +123,7 @@ func parseComponent(node xmlutil.Node, registry *component.Registry) (*component
 		DefinitionName: componentName,
 		Attributes:     make(map[string]string),
 		Children:       []*component.Instance{},
+		Slots:          make(map[string]string),
 	}
 
 	// Extract attributes
@@ -129,7 +141,18 @@ func parseComponent(node xmlutil.Node, registry *component.Registry) (*component
 		if err != nil {
 			return nil, err
 		}
-		comp.Children = children
+
+		// Separate slots from regular children
+		for _, child := range children {
+			// Check if this child is a slot (marked with __slot__ DefinitionName)
+			if child.DefinitionName == "__slot__" {
+				slotName := child.Attributes["name"]
+				comp.Slots[slotName] = child.RawHTML
+				continue
+			}
+			// Regular child
+			comp.Children = append(comp.Children, child)
+		}
 	}
 
 	return comp, nil
