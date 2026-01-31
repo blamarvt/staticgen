@@ -1,7 +1,10 @@
 <?hcml version="1.0" encoding="UTF-8"?>
 <container hcmlns="staticgen:components">
-    <div class="container">
-        <h2>{{ .Title }}</h2>
+	<div class="container">
+		<h2>{{ .Title }}</h2>
         {{ .Children }}
-    </div>
+		<div class="extra-content">
+            {{ Slot "extra" }}
+        </div>
+	</div>
 </container>

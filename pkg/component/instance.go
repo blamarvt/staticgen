@@ -12,6 +12,7 @@ type Instance struct {
 	DefinitionName string            // e.g., "titleBar"
 	Attributes     map[string]string // e.g., {"icon": "fa-user", "text": "Add User"}
 	Children       []*Instance       // Nested components
+	Slots          map[string]string // Named slots for injecting markup content
 	RawHTML        string            // Raw HTML content (for non-component elements)
 }
 
@@ -50,8 +51,18 @@ func (c *Instance) Render(registry *Registry) (string, error) {
 	// Add rendered children
 	templateData["Children"] = childrenHTML.String()
 
-	// Parse and execute the template
-	tmpl, err := template.New(c.DefinitionName).Parse(def.Template)
+	// Create template with custom functions
+	funcMap := template.FuncMap{
+		"Slot": func(name string) string {
+			if content, exists := c.Slots[name]; exists {
+				return content
+			}
+			return "" // Return empty string if slot not defined
+		},
+	}
+
+	// Parse and execute the template with custom functions
+	tmpl, err := template.New(c.DefinitionName).Funcs(funcMap).Parse(def.Template)
 	if err != nil {
 		return "", fmt.Errorf("failed to parse template for %s: %w", c.DefinitionName, err)
 	}

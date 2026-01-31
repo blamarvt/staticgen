@@ -94,6 +94,11 @@ func TestEndToEndMixedContent(t *testing.T) {
 								<li>Item 2</li>
 							</ul>
 						</section>
+						<div class="extra-content">
+			        		<p>
+			          			This is extra content in a slot.
+			        		</p>
+			      		</div>
 					</div>
 				</body>
 			</html>
@@ -132,6 +137,8 @@ func TestEndToEndNestedComponents(t *testing.T) {
 						<div class="greeting">
 							<h1>Hello, User!</h1>
 							<p>This is nested!</p>
+						</div>
+						<div class="extra-content">
 						</div>
 					</div>
 				</body>
