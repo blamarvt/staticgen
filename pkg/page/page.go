@@ -5,6 +5,8 @@ import (
 	"os"
 	"strings"
 
+	"github.com/pkg/errors"
+
 	"github.com/blamarvt/staticgen/pkg/component"
 	"github.com/blamarvt/staticgen/pkg/internal/xmlutil"
 )
@@ -20,13 +22,13 @@ type Page struct {
 func LoadPage(filepath string, registry *component.Registry) (*Page, error) {
 	data, err := os.ReadFile(filepath)
 	if err != nil {
-		return nil, err
+		return nil, errors.Wrap(err, "reading page file")
 	}
 
 	// Parse the XML structure
 	root, err := xmlutil.ParseXML(data)
 	if err != nil {
-		return nil, err
+		return nil, errors.Wrap(err, "parsing page XML")
 	}
 
 	// Verify root element is "page"
@@ -49,7 +51,7 @@ func LoadPage(filepath string, registry *component.Registry) (*Page, error) {
 	// Parse child elements as components
 	components, err := parseComponents(root.Content, registry)
 	if err != nil {
-		return nil, err
+		return nil, errors.Wrap(err, "parsing page components")
 	}
 	page.Components = components
 
