@@ -10,6 +10,7 @@ import (
 	"github.com/blamarvt/staticgen/pkg/component"
 	"github.com/blamarvt/staticgen/pkg/htmlutil"
 	"github.com/blamarvt/staticgen/pkg/page"
+	"github.com/blamarvt/staticgen/pkg/vars"
 )
 
 func TestEndToEndSimplePage(t *testing.T) {
@@ -29,7 +30,8 @@ func TestEndToEndSimplePage(t *testing.T) {
 	assert.Equal(t, "/test.html", p.Path, "Page path mismatch")
 
 	// Generate HTML
-	html, err := page.Generate(p, registry)
+	variables := vars.NewStore()
+	html, err := page.Generate(p, registry, variables)
 	require.NoError(t, err, "Failed to generate HTML")
 
 	assert.Equal(
@@ -65,7 +67,8 @@ func TestEndToEndMixedContent(t *testing.T) {
 	assert.Equal(t, "/mixed.html", p.Path, "Page path mismatch")
 
 	// Generate HTML
-	html, err := page.Generate(p, registry)
+	variables := vars.NewStore()
+	html, err := page.Generate(p, registry, variables)
 	require.NoError(t, err, "Failed to generate HTML")
 
 	assert.Equal(
@@ -120,7 +123,8 @@ func TestEndToEndNestedComponents(t *testing.T) {
 	assert.Equal(t, "Nested Test", p.Title, "Page title mismatch")
 
 	// Generate HTML
-	html, err := page.Generate(p, registry)
+	variables := vars.NewStore()
+	html, err := page.Generate(p, registry, variables)
 	require.NoError(t, err, "Failed to generate HTML")
 
 	assert.Equal(
@@ -157,7 +161,8 @@ func TestEndToEndComponentNotFound(t *testing.T) {
 	require.NoError(t, err, "Failed to load page")
 
 	// Try to generate HTML without loading definitions
-	_, err = page.Generate(p, registry)
+	variables := vars.NewStore()
+	_, err = page.Generate(p, registry, variables)
 	assert.Error(t, err, "Expected error when component definition not found")
 	assert.Contains(t, err.Error(), "component definition not found", "Error message should mention missing component")
 }
@@ -180,7 +185,8 @@ func TestEndToEndAllFixtures(t *testing.T) {
 			p, err := page.LoadPage(pagePath, registry)
 			require.NoError(t, err, "Failed to load page")
 
-			html, err := page.Generate(p, registry)
+			variables := vars.NewStore()
+			html, err := page.Generate(p, registry, variables)
 			require.NoError(t, err, "Failed to generate HTML")
 
 			// Basic sanity checks

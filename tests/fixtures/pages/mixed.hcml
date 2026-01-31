@@ -18,6 +18,7 @@
 			<div slot="extra">
 				<p>This is extra content in a slot.</p>
 			</div>
+			{{ Var "testMessage" }}
 		</component:container>
 	</component:skeleton>
 </page>

@@ -10,15 +10,26 @@ import (
 
 	"github.com/blamarvt/staticgen/pkg/component"
 	"github.com/blamarvt/staticgen/pkg/page"
+	"github.com/blamarvt/staticgen/pkg/vars"
 )
 
 func main() {
 	outputDir := flag.String("output", "dist", "output directory for generated pages")
+	configFile := flag.String("config", ".staticgen.yml", "configuration file")
 	flag.Parse()
 
 	registry := component.NewRegistry()
 	if err := registry.LoadAll("templates"); err != nil {
 		log.Fatal(errors.Wrap(err, "loading components"))
+	}
+
+	// Create a variables store and load from config
+	variables := vars.NewStore()
+	if config, err := vars.LoadConfig(*configFile); err == nil {
+		variables.LoadFromConfig(config)
+	} else if !os.IsNotExist(err) {
+		// Only log if the error is not "file not found"
+		log.Printf("Warning: failed to load config file: %v", err)
 	}
 
 	pagesDir := "pages"
@@ -32,7 +43,7 @@ func main() {
 			return errors.Wrap(err, "loading page "+path)
 		}
 
-		html, err := page.Generate(p, registry)
+		html, err := page.Generate(p, registry, variables)
 		if err != nil {
 			return errors.Wrap(err, "generating page "+path)
 		}

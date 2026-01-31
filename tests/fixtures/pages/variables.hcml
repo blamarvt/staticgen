@@ -1,0 +1,9 @@
+<page hcmlns="staticgen" 
+      hcmlns:component="staticgen:components"
+      title="Variables Test"
+      path="/variables.html">
+	<component:skeleton title="Variables Test">
+		<component:greeting name="Visitor" message="Welcome to our site with variables!" />
+		<component:footer />
+	</component:skeleton>
+</page>

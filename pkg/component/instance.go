@@ -5,6 +5,8 @@ import (
 	"fmt"
 	"strings"
 	"text/template"
+
+	"github.com/blamarvt/staticgen/pkg/vars"
 )
 
 // Instance is an instantiation of a definition with specific attribute values
@@ -17,7 +19,7 @@ type Instance struct {
 }
 
 // Render generates HTML by applying attributes to the definition's template
-func (c *Instance) Render(registry *Registry) (string, error) {
+func (c *Instance) Render(registry *Registry, variables *vars.Store) (string, error) {
 	// If this is a raw HTML instance, just return the HTML directly
 	if c.RawHTML != "" {
 		return c.RawHTML, nil
@@ -31,7 +33,7 @@ func (c *Instance) Render(registry *Registry) (string, error) {
 	// Render all children first
 	var childrenHTML strings.Builder
 	for _, child := range c.Children {
-		childHTML, err := child.Render(registry)
+		childHTML, err := child.Render(registry, variables)
 		if err != nil {
 			return "", fmt.Errorf("failed to render child component: %w", err)
 		}
@@ -58,6 +60,12 @@ func (c *Instance) Render(registry *Registry) (string, error) {
 				return content
 			}
 			return "" // Return empty string if slot not defined
+		},
+		"Var": func(name string) string {
+			if variables != nil {
+				return variables.GetOrDefault(name, "")
+			}
+			return ""
 		},
 	}
 
