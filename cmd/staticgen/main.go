@@ -19,7 +19,8 @@ func main() {
 		log.Fatal(err)
 	}
 
-	err := filepath.WalkDir("pages", func(path string, d os.DirEntry, err error) error {
+	pagesDir := "pages"
+	err := filepath.WalkDir(pagesDir, func(path string, d os.DirEntry, err error) error {
 		if err != nil || d.IsDir() || filepath.Ext(path) != ".hcml" {
 			return err
 		}
@@ -34,7 +35,20 @@ func main() {
 			return err
 		}
 
-		outPath := filepath.Join(*outputDir, p.Path)
+		// Use the path attribute from the page, or derive from file location
+		var outPath string
+		if p.Path != "" {
+			outPath = filepath.Join(*outputDir, filepath.FromSlash(p.Path))
+		} else {
+			// Derive output path from source file location relative to pages dir
+			relPath, err := filepath.Rel(pagesDir, path)
+			if err != nil {
+				return err
+			}
+			// Replace .hcml extension with .html
+			outPath = filepath.Join(*outputDir, relPath[:len(relPath)-len(filepath.Ext(relPath))]+".html")
+		}
+
 		if err := os.MkdirAll(filepath.Dir(outPath), 0755); err != nil {
 			return err
 		}
