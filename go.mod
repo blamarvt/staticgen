@@ -4,6 +4,7 @@ go 1.25.5
 
 require (
 	codeberg.org/derat/htmlpretty v0.0.0-20241226124600-6358d6878bd9
+	github.com/pkg/errors v0.9.1
 	github.com/stretchr/testify v1.11.1
 	github.com/yosssi/gohtml v0.0.0-20201013000340-ee4748c638f4
 	golang.org/x/net v0.49.0
