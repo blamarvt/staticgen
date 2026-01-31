@@ -17,7 +17,7 @@ func main() {
 	flag.Parse()
 
 	registry := component.NewRegistry()
-	if err := registry.LoadAll("templates/components"); err != nil {
+	if err := registry.LoadAll("templates"); err != nil {
 		log.Fatal(errors.Wrap(err, "loading components"))
 	}
 
