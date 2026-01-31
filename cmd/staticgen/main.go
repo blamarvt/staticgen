@@ -1,6 +1,7 @@
 package main
 
 import (
+	"flag"
 	"log"
 	"os"
 	"path/filepath"
@@ -10,6 +11,9 @@ import (
 )
 
 func main() {
+	outputDir := flag.String("output", "dist", "output directory for generated pages")
+	flag.Parse()
+
 	registry := component.NewRegistry()
 	if err := registry.LoadAll("templates/components"); err != nil {
 		log.Fatal(err)
@@ -30,7 +34,12 @@ func main() {
 			return err
 		}
 
-		return os.WriteFile("output/"+p.Path, []byte(html), 0644)
+		outPath := filepath.Join(*outputDir, p.Path)
+		if err := os.MkdirAll(filepath.Dir(outPath), 0755); err != nil {
+			return err
+		}
+
+		return os.WriteFile(outPath, []byte(html), 0644)
 	})
 
 	if err != nil {
